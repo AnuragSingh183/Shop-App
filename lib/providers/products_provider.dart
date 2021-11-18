@@ -37,6 +37,9 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+  List<Product> get FavouriteItems {
+    return items.where((proditem) => proditem.isFav).toList();
+  }
 
   List<Product> get items {
     //to fetch private properties like _items use getters
