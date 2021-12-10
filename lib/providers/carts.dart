@@ -14,7 +14,7 @@ class Cart with ChangeNotifier {
       {}; //will not work if it is uninitialized so have to initilize as an empty map.
 
   Map<String, cartItem> get items {
-    return {...items};
+    return {..._items};
   }
 
   int get count {
@@ -47,6 +47,11 @@ class Cart with ChangeNotifier {
               price: price,
               quantity: 1));
     }
+    notifyListeners();
+  }
+
+  void removeitem(String productId) {
+    _items.remove(productId);
     notifyListeners();
   }
 }
