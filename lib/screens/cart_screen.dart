@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/orders.dart';
 import 'package:shop_app/widgets/cartitem.dart';
 import '../providers/carts.dart';
 import '../widgets/cartitem.dart';
@@ -32,7 +33,13 @@ class CartScreen extends StatelessWidget {
                       label: Text('\$${wish.totalAmount}'),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
-                    TextButton(onPressed: () {}, child: Text("ORDER NOW"))
+                    TextButton(
+                        onPressed: () {
+                          Provider.of<Orders>(context, listen: false).addOrders(
+                              wish.items.values.toList(), wish.totalAmount);
+                          wish.clear();
+                        },
+                        child: Text("ORDER NOW"))
                   ],
                 ),
               )),
@@ -44,6 +51,7 @@ class CartScreen extends StatelessWidget {
                   ListView.builder(
                       itemCount: wish.count,
                       itemBuilder: (ctx, i) => Cartitem(
+                          //cartitem widget shows how one product in the cart will look like.
                           wish.items.values
                               .toList()[i]
                               .id, //items is a map we can take just a null value. we r interested in its value.

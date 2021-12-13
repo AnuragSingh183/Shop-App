@@ -41,3 +41,7 @@ class Cartitem extends StatelessWidget {
     );
   }
 }
+
+
+
+//screen shows how the screen looks like and _item.dart shows how an item looks like in the screen.
