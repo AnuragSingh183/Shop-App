@@ -33,7 +33,7 @@ class CartScreen extends StatelessWidget {
                       label: Text('\$${wish.totalAmount}'),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                         onPressed: () {
                           Provider.of<Orders>(context, listen: false).addOrders(
                               wish.items.values.toList(), wish.totalAmount);
