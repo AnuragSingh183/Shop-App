@@ -9,14 +9,14 @@ class AppDrawer extends StatelessWidget {
         children: [
           AppBar(
             title: Text("SUP"),
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false, //will never add a back button
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.shop),
             title: Text("Shop"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed("/");
+              Navigator.of(context).pushNamed("/");
             },
           ),
           Divider(),
@@ -24,7 +24,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.payment),
             title: Text("orders"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(OrderScreen.routename);
+              Navigator.of(context).pushNamed(OrderScreen.routename);
             },
           )
         ],

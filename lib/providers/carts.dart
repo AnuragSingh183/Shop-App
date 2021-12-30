@@ -57,5 +57,6 @@ class Cart with ChangeNotifier {
 
   void clear() {
     _items = {};
+    notifyListeners(); //will clear the items in the cartscreen
   }
 }

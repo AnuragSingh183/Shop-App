@@ -13,7 +13,7 @@ class CartScreen extends StatelessWidget {
         Provider.of<Cart>(context); //<> contains the class with change notifier
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your Orders"),
+        title: Text("Your Cart"),
       ),
       body: Column(
         children: [
@@ -33,7 +33,7 @@ class CartScreen extends StatelessWidget {
                       label: Text('\$${wish.totalAmount}'),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
-                    TextButton(
+                    RaisedButton(
                         onPressed: () {
                           Provider.of<Orders>(context, listen: false).addOrders(
                               wish.items.values.toList(), wish.totalAmount);
