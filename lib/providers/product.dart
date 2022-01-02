@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
   final String id;
@@ -17,7 +18,10 @@ class Product with ChangeNotifier {
       this.title});
 
   void toggleisFav() {
+    final oldStatus = isFav;
+
     isFav = !isFav;
-    notifyListeners(); //equivalent to set state in providers.
+    notifyListeners();
+    //equivalent to set state in providers.
   }
 }
