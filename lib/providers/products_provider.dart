@@ -46,8 +46,16 @@ class Products with ChangeNotifier {
     return [..._items]; //copy of items
   }
 
-  void addProducts() {
+  void addProducts(Product product) {
     //_items.add();
+    final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        id: DateTime.now().toString(),
+        price: product.price);
+    _items.add(newProduct);
+    //_items.insert(0, newProduct);to inset at the start
     notifyListeners();
   }
 

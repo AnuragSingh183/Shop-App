@@ -28,12 +28,14 @@ class Cartitem extends StatelessWidget {
                   title: Text("R U SHURE"),
                   content: Text("Do u want 2 remuv d item from d the cart"),
                   actions: [
+                    // ignore: deprecated_member_use
                     FlatButton(
                       onPressed: () {
                         Navigator.of(ctx).pop(false);
                       },
                       child: Text("NO"),
                     ),
+                    // ignore: deprecated_member_use
                     FlatButton(
                         onPressed: () {
                           Navigator.of(ctx).pop(true);

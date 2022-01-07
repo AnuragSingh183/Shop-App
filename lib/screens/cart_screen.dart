@@ -35,6 +35,7 @@ class CartScreen extends StatelessWidget {
                       label: Text('\$${wish.totalAmount}'),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
+                    // ignore: deprecated_member_use
                     FlatButton(
                         onPressed: () {
                           Provider.of<Orders>(context, listen: false).addOrders(

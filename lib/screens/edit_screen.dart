@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/product.dart';
+import 'package:provider/provider.dart';
+import '../providers/products_provider.dart';
 
 class EditProduct extends StatefulWidget {
   static const routeName = "/EditProduct";
@@ -23,6 +25,7 @@ class _EditScreenState extends State<EditProduct> {
     _prizefocus.dispose();
     _descriptionfocus.dispose();
     _imageUrl.dispose();
+    super.dispose();
   }
 
   void _saveForm() {
@@ -33,6 +36,8 @@ class _EditScreenState extends State<EditProduct> {
     if (!isValid) {
       return null;
     }
+    Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -41,7 +46,7 @@ class _EditScreenState extends State<EditProduct> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text("Edit Product"),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.save))],
+        actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
       ),
       body: Form(
         key: _form,
@@ -165,12 +170,12 @@ class _EditScreenState extends State<EditProduct> {
                       if (value.isEmpty) {
                         return "Please Enter the ImageUrl";
                       }
-                      if (!value.startsWith("http") ||
+                      if (!value.startsWith("http") &&
                           !value.startsWith("https")) {
                         return "Please Enter a valid Url";
                       }
-                      if (!value.endsWith(".png") ||
-                          !value.endsWith(".jpeg") ||
+                      if (!value.endsWith(".png") &&
+                          !value.endsWith(".jpeg") &&
                           !value.endsWith("jpg")) {
                         return "Please enter a valid url";
                       }
