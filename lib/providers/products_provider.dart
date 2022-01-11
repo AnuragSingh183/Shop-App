@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'product.dart';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   //mixins same as inheritence but the connection is weAK. dart doesnot support multiple inheritence but with mixins we can add as many properties as we can.
@@ -46,17 +48,31 @@ class Products with ChangeNotifier {
     return [..._items]; //copy of items
   }
 
-  void addProducts(Product product) {
-    //_items.add();
-    final newProduct = Product(
-        title: product.title,
-        description: product.description,
-        imageUrl: product.imageUrl,
-        id: DateTime.now().toString(),
-        price: product.price);
-    _items.add(newProduct);
-    //_items.insert(0, newProduct);to inset at the start
-    notifyListeners();
+  Future<void> addProducts(Product product) {
+    const url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+    return http
+        .post(Uri.parse(url),
+            body: json.encode({
+              "title": product.title,
+              "description": product.description,
+              "id": product.id,
+              "imageUrl": product.imageUrl,
+              "price": product.price,
+              "isFav": product.isFav,
+            }))
+        .then((response) {
+      final newProduct = Product(
+          title: product.title,
+          description: product.description,
+          imageUrl: product.imageUrl,
+          id: json.decode(response.body)[
+              "name"], //backend id will be the default id everywhere
+          price: product.price);
+      _items.add(newProduct);
+      //_items.insert(0, newProduct);to insert at the start
+      notifyListeners();
+    });
   }
 
   Product findbyId(String id) {
