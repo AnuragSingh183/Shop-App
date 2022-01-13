@@ -30,7 +30,8 @@ class _EditScreenState extends State<EditProduct> {
 
   var _isLoading = false;
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
+    //add products returning a future
     final isValid = _form.currentState.validate();
     if (!isValid) {
       return null;
@@ -40,14 +41,33 @@ class _EditScreenState extends State<EditProduct> {
     setState(() {
       _isLoading = true;
     });
-    Provider.of<Products>(context, listen: false)
-        .addProducts(_editedProduct)
-        .then((_) {
+    try {
+      await Provider.of<Products>(context, listen: false)
+          .addProducts(_editedProduct);
+    } catch (error) {
+      await showDialog(
+          //show dialog also returns future
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("An Error Occured"),
+                content: Text("Something Went Wrong"),
+                actions: [
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+    }
+    //then block will only be executed once the user presses the ok button in the error message.
+
+     finally {
       setState(() {
         _isLoading = false;
       });
       Navigator.of(context).pop();
-    });
+    }
   }
 
   @override
