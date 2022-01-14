@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
 
 class Product with ChangeNotifier {
   final String id;
@@ -16,11 +19,24 @@ class Product with ChangeNotifier {
       this.price,
       this.title});
 
-  void toggleisFav() {
+  Future<void> toggleisFav() async {
     final oldStatus = isFav;
 
     isFav = !isFav;
-    notifyListeners();
+    final url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+
+    try {
+      await http.patch(Uri.parse(url),
+          body: json.encode({
+            "isFav": isFav,
+          }));
+      notifyListeners();
+    } catch (error) {
+      isFav = oldStatus;
+      notifyListeners();
+    }
+
     //equivalent to set state in providers.
   }
 }

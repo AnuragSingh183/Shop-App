@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
@@ -109,5 +110,23 @@ class Products with ChangeNotifier {
 
   Product findbyId(String id) {
     return _items.firstWhere((prod) => prod.id == id);
+  }
+
+  Future<void> deleteProduct(String id) {
+    final url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+    final existingProductIndex = _items.indexWhere((prod) =>
+        prod.id == id); //will gib the index for the product for deletion
+    var existingProduct =
+        _items[existingProductIndex]; //pointer for the product
+
+    http.delete(Uri.parse(url)).then((_) {
+      existingProduct = null;
+    }).catchError((_) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
+    _items.removeAt(existingProductIndex);
+    notifyListeners();
   }
 }
