@@ -27,10 +27,14 @@ class Product with ChangeNotifier {
         "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
 
     try {
-      await http.patch(Uri.parse(url),
+      final response = await http.patch(Uri.parse(url),
           body: json.encode({
             "isFav": isFav,
           }));
+      if (response.statusCode >= 400) {
+        isFav = oldStatus;
+        notifyListeners();
+      }
       notifyListeners();
     } catch (error) {
       isFav = oldStatus;
