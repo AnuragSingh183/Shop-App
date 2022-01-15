@@ -23,9 +23,9 @@ class _ProductoverviewState extends State<Productoverview> {
     // setState(() {
     //   _isLoading = true;
     // });
-    // //Provider.of<Products>(context).fetchProduct(); WONT WORK .OF(CONTEXT) DOESNOT WORK IN INIT STATE.
-    // Future.delayed(Duration.zero).then((value) {
-    //   Provider.of<Products>(context).fetchProduct().then((_) {
+    //Provider.of<Products>(context).fetchProduct();// WONT WORK .OF(CONTEXT) DOESNOT WORK IN INIT STATE.
+    //Future.delayed(Duration.zero).then((value) {
+    //  Provider.of<Products>(context).fetchProduct().then((_) {
     //     setState(() {
     //       _isLoading = false;
     //     });

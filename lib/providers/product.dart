@@ -19,18 +19,27 @@ class Product with ChangeNotifier {
       this.price,
       this.title});
 
-  Future<void> toggleisFav() async {
-    final oldStatus = isFav;
+  Map<String, dynamic> toMap() {
+    return {
+      'imageUrl': this.imageUrl,
+      'description': this.description,
+      'price': this.price,
+      'title': this.title,
+      'isFav': this.isFav,
+    };
+  }
 
-    isFav = !isFav;
+  Future<void> toggleisFav() async {
+    final oldStatus = this.isFav;
+
+    this.isFav = !this.isFav;
+    isFav = this.isFav;
     final url =
         "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
 
     try {
       final response = await http.patch(Uri.parse(url),
-          body: json.encode({
-            "isFav": isFav,
-          }));
+          body: json.encode({this.id: this.toMap()}));
       if (response.statusCode >= 400) {
         isFav = oldStatus;
         notifyListeners();
@@ -40,6 +49,8 @@ class Product with ChangeNotifier {
       isFav = oldStatus;
       notifyListeners();
     }
+
+    this.isFav = isFav;
 
     //equivalent to set state in providers.
   }

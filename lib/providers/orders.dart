@@ -21,20 +21,56 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchOrders() async {
+    const url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/orders.json";
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+      );
+      //print(json.decode(response.body));
+      final List<OrderItem> loadedProducts = [];
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      extractedData.forEach((orderId, orderData) {
+        loadedProducts.add(OrderItem(
+          id: orderId,
+          amount: orderData["amount"],
+          date: DateTime.parse(orderData["date"]),
+          products: (orderData["products"] as List<dynamic>)
+              .map((item) => cartItem(
+                    id: item["id"],
+                    quantity: item["Quantity"],
+                    price: item["price"],
+                    title: item["title"],
+                  ))
+              .toList(),
+        ));
+      });
+      _orders = loadedProducts.reversed
+          .toList(); //reversed shows the latest order first.
+      notifyListeners();
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> addOrders(List<cartItem> cartproducts, double total) async {
     const url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/orders.json";
     final timestamp = DateTime.now();
     final response = await http.post(Uri.parse(url),
         body: json.encode({
           "amount": total,
           "date": timestamp.toIso8601String(),
-          "products": cartproducts.map((cp) => {
-                "id": cp.id,
-                "price": cp.price,
-                "title": cp.title,
-                "Quantity": cp.quantity,
-              })
+          "products": cartproducts
+              .map((cp) => {
+                    "id": cp.id,
+                    "price": cp.price,
+                    "title": cp.title,
+                    "Quantity": cp.quantity,
+                  })
+              .toList()
         }));
 
     _orders.insert(

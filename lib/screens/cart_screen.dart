@@ -49,14 +49,14 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           // ignore: deprecated_member_use
                           FlatButton(
-                              onPressed: wish.totalAmount <= 0 || _isLoading
+                              onPressed: (wish.totalAmount <= 0 || _isLoading)
                                   ? null
-                                  : () {
+                                  : () async {
                                       setState(() {
                                         _isLoading = true;
                                       });
 
-                                      Provider.of<Orders>(context,
+                                      await Provider.of<Orders>(context,
                                               listen: false)
                                           .addOrders(wish.items.values.toList(),
                                               wish.totalAmount);
@@ -66,7 +66,9 @@ class _CartScreenState extends State<CartScreen> {
                                       });
                                       wish.clear();
                                     },
-                              child: Text("ORDER NOW"))
+                              child: _isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text("ORDER NOW"))
                         ],
                       ),
                     )),
