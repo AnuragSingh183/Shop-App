@@ -16,7 +16,7 @@ class ProductDetail extends StatelessWidget {
         Provider.of<Products>(context, listen: false).findbyId(ProductId);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         title: Text(loaded.title),
       ),
       body: Column(

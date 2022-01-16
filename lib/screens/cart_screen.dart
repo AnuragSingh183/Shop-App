@@ -20,9 +20,9 @@ class _CartScreenState extends State<CartScreen> {
     final wish =
         Provider.of<Cart>(context); //<> contains the class with change notifier
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         title: Text("Your Cart"),
       ),
       body: _isLoading

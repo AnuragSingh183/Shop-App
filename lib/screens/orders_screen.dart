@@ -32,9 +32,9 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     final orderData = Provider.of<Orders>(context);
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black,
           title: Text("Your Orders"),
         ),
         drawer: AppDrawer(),
