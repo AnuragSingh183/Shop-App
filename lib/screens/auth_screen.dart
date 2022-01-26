@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -57,7 +59,7 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'MyShop',
+                        'BRUH',
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 50,
@@ -100,7 +102,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -111,8 +113,12 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       // Log user in
+      await Provider.of<Auth>(context, listen: false)
+          .login(_authData["email"], _authData["password"]);
     } else {
       // Sign user up
+      await Provider.of<Auth>(context, listen: false)
+          .signup(_authData["email"], _authData["password"]);
     }
     setState(() {
       _isLoading = false;
@@ -209,7 +215,7 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 FlatButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'New User ? SIGN IN' : 'Already a user ? LOGIN'}'),
+                      '${_authMode == AuthMode.Login ? 'New User ? SIGN UP' : 'Already a user ? LOGIN'}'),
                   onPressed: _switchAuthMode,
                   padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
