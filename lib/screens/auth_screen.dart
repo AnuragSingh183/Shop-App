@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/exception.dart';
 import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
@@ -102,24 +103,66 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _showErrorMsg(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text("An Error Occured!"),
+              content: Text(message),
+              actions: [
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text("Okay"))
+              ],
+            ));
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
-      return;
+      return; //if validation fails we simply return
     }
-    _formKey.currentState.save();
+    _formKey.currentState.save(); //if validation works then simply save
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-      await Provider.of<Auth>(context, listen: false)
-          .login(_authData["email"], _authData["password"]);
-    } else {
-      // Sign user up
-      await Provider.of<Auth>(context, listen: false)
-          .signup(_authData["email"], _authData["password"]);
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false)
+            .login(_authData["email"], _authData["password"]);
+      } else {
+        // Sign user up
+        await Provider.of<Auth>(context, listen: false)
+            .signup(_authData["email"], _authData["password"]);
+      }
+      Navigator.of(context).pushReplacementNamed("/ProductOverview");
+    } on httpException catch (error) {
+      var errorMessage = "Authentication Failed";
+      if (error.toString().contains("EMAIL_EXISTS")) {
+        errorMessage = "This Email is already in use";
+      }
+      if (error.toString().contains("INVALID_EMAIL")) {
+        errorMessage = "This Email is not Valid";
+      }
+      if (error.toString().contains("WEAK_PASSWORD")) {
+        errorMessage = "Try a Stronger Password";
+      }
+      if (error.toString().contains("EMAIL_NOT_FOUND")) {
+        errorMessage = "This Email is not Valid";
+      }
+      if (error.toString().contains("INVALID_PASSWORD")) {
+        errorMessage = "Invalid Password";
+      }
+
+      _showErrorMsg(errorMessage);
+    } catch (error) {
+      const errorMessage = "Something Went Wrong.Please try again.";
+      _showErrorMsg(errorMessage);
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -158,7 +201,6 @@ class _AuthCardState extends State<AuthCard> {
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
-                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
@@ -187,6 +229,7 @@ class _AuthCardState extends State<AuthCard> {
                     enabled: _authMode == AuthMode.Signup,
                     decoration: InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
+                    keyboardType: TextInputType.number,
                     validator: _authMode == AuthMode.Signup
                         ? (value) {
                             if (value != _passwordController.text) {

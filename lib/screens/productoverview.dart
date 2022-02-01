@@ -10,6 +10,7 @@ import '../providers/products_provider.dart';
 enum filteroptions { favourites, all }
 
 class Productoverview extends StatefulWidget {
+  static const routename = "/ProductOverview";
   @override
   State<Productoverview> createState() => _ProductoverviewState();
 }
