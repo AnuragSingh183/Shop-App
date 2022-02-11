@@ -20,29 +20,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: Auth()),
-        ChangeNotifierProvider(
-          create: (context) => Products(),
-        ),
-        ChangeNotifierProvider(create: (context) => Cart()),
-        ChangeNotifierProvider(
-          create: (context) => Orders(),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Shop App',
-        debugShowCheckedModeBanner: false,
-        home: AuthScreen(),
-        routes: {
-          Productoverview.routename: (ctx) => Productoverview(),
-          ProductDetail.routename: (ctx) => ProductDetail(),
-          CartScreen.routename: (ctx) => CartScreen(),
-          OrderScreen.routename: (ctx) => OrderScreen(),
-          UserProducts.routeName: (ctx) => UserProducts(),
-          EditProduct.routeName: (ctx) => EditProduct()
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider.value(value: Auth()),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            //first arg. is the class that it depends on and second is the class that it provides
+            //product class will rebuild whenever auth changes
+            create: (ctx) =>
+                Products(Provider.of<Auth>(ctx, listen: false).token, []),
+
+            update: (ctx, auth, previousProducts) => Products(auth.token,
+                previousProducts == null ? [] : previousProducts.items),
+          ),
+          ChangeNotifierProvider(create: (context) => Cart()),
+          ChangeNotifierProvider(
+            create: (context) => Orders(),
+          ),
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'Shop App',
+            debugShowCheckedModeBanner: false,
+            home: auth.isAuth ? Productoverview() : AuthScreen(),
+            routes: {
+              ProductDetail.routename: (ctx) => ProductDetail(),
+              CartScreen.routename: (ctx) => CartScreen(),
+              OrderScreen.routename: (ctx) => OrderScreen(),
+              UserProducts.routeName: (ctx) => UserProducts(),
+              EditProduct.routeName: (ctx) => EditProduct()
+            },
+          ),
+        ));
   }
 }

@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -42,6 +40,10 @@ class Products with ChangeNotifier {
     //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     // ),
   ];
+
+  final String authToken;
+  Products(this.authToken, this._items);
+
   List<Product> get FavouriteItems {
     return items.where((proditem) => proditem.isFav).toList();
   }
@@ -52,8 +54,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProduct() async {
-    const url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+    final url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -83,8 +85,8 @@ class Products with ChangeNotifier {
 
   Future<void> addProducts(Product product) async {
     //async auto returns a future
-    const url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+    final url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     try {
       //we use try in the code block which is likely to fail.
       final response = await http.post(Uri.parse(url),
