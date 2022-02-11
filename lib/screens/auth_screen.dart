@@ -180,6 +180,8 @@ class _AuthCardState extends State<AuthCard> {
     }
   }
 
+  bool _showpassword = true;
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -212,8 +214,18 @@ class _AuthCardState extends State<AuthCard> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
-                  obscureText: true,
+                  decoration: InputDecoration(
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _showpassword = !_showpassword;
+                            });
+                          },
+                          icon: Icon(_showpassword
+                              ? Icons.visibility
+                              : Icons.visibility_off))),
+                  obscureText: _showpassword,
                   controller: _passwordController,
                   validator: (value) {
                     if (value.isEmpty || value.length < 5) {
@@ -227,7 +239,9 @@ class _AuthCardState extends State<AuthCard> {
                 if (_authMode == AuthMode.Signup)
                   TextFormField(
                     enabled: _authMode == AuthMode.Signup,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                    ),
                     obscureText: true,
                     keyboardType: TextInputType.number,
                     validator: _authMode == AuthMode.Signup

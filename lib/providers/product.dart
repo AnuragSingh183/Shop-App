@@ -10,6 +10,7 @@ class Product with ChangeNotifier {
   final double price;
   bool isFav;
   final String title;
+  final String authToken;
 
   Product(
       {this.imageUrl,
@@ -17,7 +18,8 @@ class Product with ChangeNotifier {
       this.id,
       this.isFav = false,
       this.price,
-      this.title});
+      this.title,
+      this.authToken});
 
   Map<String, dynamic> toMap() {
     return {
@@ -35,7 +37,7 @@ class Product with ChangeNotifier {
     this.isFav = !this.isFav;
     isFav = this.isFav;
     final url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json";
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
 
     try {
       final response = await http.patch(Uri.parse(url),
