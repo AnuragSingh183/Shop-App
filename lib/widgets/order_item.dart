@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../providers/orders.dart' as ord;
 
-class OrderIte extends StatefulWidget {
+class OrderItem extends StatefulWidget {
   final ord.OrderItem order;
 
-  OrderIte(this.order);
+  OrderItem(this.order);
 
   @override
-  _OrderIteState createState() => _OrderIteState();
+  _OrderItemState createState() => _OrderItemState();
 }
 
-class _OrderIteState extends State<OrderIte> {
+class _OrderItemState extends State<OrderItem> {
   var _expanded = false;
 
   @override

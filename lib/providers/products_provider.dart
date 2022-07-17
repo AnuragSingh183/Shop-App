@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import '../models/exception.dart';
 import 'package:flutter/material.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +9,8 @@ class Products with ChangeNotifier {
   List<Product> _items = [];
 
   final String authToken;
-  Products(this.authToken, this._items);
+  final String userId;
+  Products(this._items, this.authToken, this.userId);
 
   List<Product> get FavouriteItems {
     return items.where((proditem) => proditem.isFav).toList();
@@ -20,9 +21,11 @@ class Products with ChangeNotifier {
     return [..._items]; //copy of items
   }
 
-  Future<void> fetchProduct() async {
-    final url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
+  Future<void> fetchProduct([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    var url =
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -64,6 +67,7 @@ class Products with ChangeNotifier {
             "imageUrl": product.imageUrl,
             "price": product.price,
             "isFav": product.isFav,
+            "creatorId": userId
           }));
 
       final newProduct = Product(
@@ -86,21 +90,23 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     final url =
         "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
     final existingProductIndex = _items.indexWhere((prod) =>
         prod.id == id); //will gib the index for the product for deletion
     var existingProduct =
         _items[existingProductIndex]; //pointer for the product
+    items.removeAt(existingProductIndex);
 
-    http.delete(Uri.parse(url)).then((_) {
-      existingProduct = null;
-    }).catchError((_) {
+    final response = await http.delete(Uri.parse(url));
+    if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
-    });
-    _items.removeAt(existingProductIndex);
-    notifyListeners();
+      notifyListeners();
+      throw httpException("Could not delete Product");
+    }
+
+    existingProduct = null;
   }
 }

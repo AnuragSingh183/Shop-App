@@ -3,16 +3,18 @@ import 'package:shop_app/providers/carts.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screens/product_detail.dart';
 import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 import "../providers/carts.dart";
 
 class ProductItem extends StatelessWidget {
   //final String title;
   //final String id;
-  //final String imageUrl;
-  //ProductItem(this.imageUrl, this.title, this.id);
+//final String imageUrl;
+//  ProductItem(this.imageUrl);
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<Auth>(context, listen: false);
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
@@ -32,7 +34,7 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87,
           leading: IconButton(
               onPressed: () {
-                product.toggleisFav();
+                product.toggleisFav(authData.token, authData.userId);
               },
               icon:
                   Icon(product.isFav ? Icons.favorite : Icons.favorite_border)),

@@ -3,7 +3,7 @@ import 'package:shop_app/widgets/drawer.dart';
 import '../providers/orders.dart' show Orders;
 import 'package:provider/provider.dart';
 import '../widgets/order_item.dart';
-import '../providers/orders.dart';
+//import '../providers/orders.dart';
 
 class OrderScreen extends StatefulWidget {
   static const routename = "/orders";
@@ -44,7 +44,7 @@ class _OrderScreenState extends State<OrderScreen> {
               )
             : ListView.builder(
                 itemCount: orderData.orders.length,
-                itemBuilder: (context, i) => OrderIte(orderData.orders[i]),
+                itemBuilder: (context, i) => OrderItem(orderData.orders[i]),
               ));
   }
 }

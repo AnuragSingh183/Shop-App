@@ -25,18 +25,22 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<Auth, Products>(
             //first arg. is the class that it depends on and second is the class that it provides
             //product class will rebuild whenever auth changes
-            create: (ctx) =>
-                Products(Provider.of<Auth>(ctx, listen: false).token, []),
+            create: (ctx) => Products([],
+                Provider.of<Auth>(ctx, listen: false).token,
+                Provider.of<Auth>(ctx, listen: false).userId),
 
-            update: (ctx, auth, previousProducts) => Products(auth.token,
-                previousProducts == null ? [] : previousProducts.items),
+            update: (ctx, auth, previousProducts) => Products(
+              previousProducts == null ? [] : previousProducts.items,
+              auth.token,
+              auth.userId,
+            ),
           ),
           ChangeNotifierProvider(create: (context) => Cart()),
           ChangeNotifierProxyProvider<Auth, Orders>(
             create: (ctx) =>
                 Orders(Provider.of<Auth>(ctx, listen: false).token, []),
-            update: (ctx, auth, previousProducts) => Orders(auth.token,
-                previousProducts == null ? [] : previousProducts.orders),
+            update: (ctx, auth, previousOrders) => Orders(auth.token,
+                previousOrders == null ? [] : previousOrders.orders),
           ),
         ],
         child: Consumer<Auth>(

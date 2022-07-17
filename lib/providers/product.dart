@@ -31,13 +31,14 @@ class Product with ChangeNotifier {
     };
   }
 
-  Future<void> toggleisFav() async {
-    final oldStatus = this.isFav;
+  Future<void> toggleisFav(String token, String userId) async {
+    final oldStatus = isFav;
+    isFav = !isFav;
+    notifyListeners();
 
-    this.isFav = !this.isFav;
     isFav = this.isFav;
     final url =
-        "https://shop-app-a70e5-default-rtdb.firebaseio.com/products.json?auth=$authToken";
+        "https://shop-app-a70e5-default-rtdb.firebaseio.com/userFavourites/$userId/$id.json?auth=$authToken";
 
     try {
       final response = await http.patch(Uri.parse(url),
@@ -53,7 +54,5 @@ class Product with ChangeNotifier {
     }
 
     this.isFav = isFav;
-
-    //equivalent to set state in providers.
   }
 }
